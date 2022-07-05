@@ -75,7 +75,8 @@ struct SettingView: View {
 				}
 			}
 			.listStyle(InsetGroupedListStyle())
-			.navigationBarTitle(Text("Setting"), displayMode: .inline)
+			.navigationTitle(Text("Settings"))
+			.navigationBarTitleDisplayMode(.inline)
 		}
 		.navigationViewStyle(.stack)
 	}
