@@ -10,6 +10,27 @@ struct Accuracy: Identifiable {
 }
 
 struct SettingView: View {
+	
+	var body: some View {
+		if #available(iOS 16.0, *) {
+			NavigationStack {
+				SettingContentView()
+				.listStyle(InsetGroupedListStyle())
+				.navigationTitle(Text("Settings"))
+				.navigationBarTitleDisplayMode(.inline)
+			}
+		} else {
+			NavigationView {
+				SettingContentView()
+				.listStyle(InsetGroupedListStyle())
+				.navigationBarTitle(Text("Settings"), displayMode: .inline)
+			}
+			.navigationViewStyle(.stack) // iPadで必要
+		}
+	}
+}
+
+struct SettingContentView: View {
 	let lang: String = NSLocalizedString("lang", comment: "")
 	let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 	let accuracyList: [Accuracy] = [
@@ -26,59 +47,53 @@ struct SettingView: View {
 	@AppStorage("sw2") var sw2: Bool = false
 	
 	var body: some View {
-		NavigationView {
-			List {
-				Section(header: Text("Switch")) {
-					Toggle(isOn: self.$sw1) {
-						Text("SW1")
-					}
-					.toggleStyle(SwitchToggleStyle())
-					
-					Toggle(isOn: self.$sw2) {
-						Text("SW2")
-					}
-					.toggleStyle(SwitchToggleStyle())
+		List {
+			Section(header: Text("Switch")) {
+				Toggle(isOn: self.$sw1) {
+					Text("SW1")
 				}
+				.toggleStyle(SwitchToggleStyle())
 				
-				Section(header: Text("Accuracy")) {
-					ForEach(self.accuracyList) { item in
-						HStack {
-							Button(action: {
-								self.desiredAccuracy = item.id
-							}) {
-								item.text
-									.foregroundColor(.primary)
-							}
-							if self.desiredAccuracy == item.id {
-								Spacer()
-								Image(systemName: "checkmark")
-									.font(Font.system(.body).bold())
-									.foregroundColor(.accentColor)
-							}
+				Toggle(isOn: self.$sw2) {
+					Text("SW2")
+				}
+				.toggleStyle(SwitchToggleStyle())
+			}
+			
+			Section(header: Text("Accuracy")) {
+				ForEach(self.accuracyList) { item in
+					HStack {
+						Button(action: {
+							self.desiredAccuracy = item.id
+						}) {
+							item.text
+								.foregroundColor(.primary)
+						}
+						if self.desiredAccuracy == item.id {
+							Spacer()
+							Image(systemName: "checkmark")
+								.font(Font.system(.body).bold())
+								.foregroundColor(.accentColor)
 						}
 					}
 				}
-				
-				Section(header: Text("Others")) {
-					Link(destination: URL(string:"https://hideo-uhara.github.io/homepage/GPSLoggerS/support.html")!) {
-						Text("Support Page")
-					}
-					.foregroundColor(.primary)
-					Link(destination: URL(string:"https://apps.apple.com/us/app/gpsloggers-track/id1515199137?l=\(self.lang)&ls=1")!) {
-						Text("GPSLoggerS Track(Mac App Store)")
-					}
-					.foregroundColor(.primary)
-				}
-				
-				Section(header: Text("Version")) {
-					Text(self.version)
-				}
 			}
-			.listStyle(InsetGroupedListStyle())
-			.navigationTitle(Text("Settings"))
-			.navigationBarTitleDisplayMode(.inline)
+			
+			Section(header: Text("Others")) {
+				Link(destination: URL(string:"https://hideo-uhara.github.io/homepage/GPSLoggerS/support.html")!) {
+					Text("Support Page")
+				}
+				.foregroundColor(.primary)
+				Link(destination: URL(string:"https://apps.apple.com/us/app/gpsloggers-track/id1515199137?l=\(self.lang)&ls=1")!) {
+					Text("GPSLoggerS Track(Mac App Store)")
+				}
+				.foregroundColor(.primary)
+			}
+			
+			Section(header: Text("Version")) {
+				Text(self.version)
+			}
 		}
-		.navigationViewStyle(.stack)
 	}
 }
 
