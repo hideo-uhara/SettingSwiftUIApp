@@ -48,7 +48,7 @@ struct SettingContentView: View {
 	
 	var body: some View {
 		List {
-			Section(header: Text("Switch")) {
+			Section {
 				Toggle(isOn: self.$sw1) {
 					Text("SW1")
 				}
@@ -58,9 +58,11 @@ struct SettingContentView: View {
 					Text("SW2")
 				}
 				.toggleStyle(SwitchToggleStyle())
+			} header: {
+				Text("Switch")
 			}
 			
-			Section(header: Text("Accuracy")) {
+			Section {
 				ForEach(self.accuracyList) { item in
 					HStack {
 						Button(action: {
@@ -77,9 +79,11 @@ struct SettingContentView: View {
 						}
 					}
 				}
+			} header: {
+				Text("Accuracy")
 			}
 			
-			Section(header: Text("Others")) {
+			Section {
 				Link(destination: URL(string:"https://hideo-uhara.github.io/homepage/GPSLoggerS/support.html")!) {
 					Text("Support Page")
 				}
@@ -88,11 +92,17 @@ struct SettingContentView: View {
 					Text("GPSLoggerS Track(Mac App Store)")
 				}
 				.foregroundColor(.primary)
+			} header: {
+				Text("Others")
 			}
 			
-			Section(header: Text("Version")) {
+			Section {
 				Text(self.version)
+			} header: {
+				Text("Version")
 			}
+
+
 		}
 	}
 }
